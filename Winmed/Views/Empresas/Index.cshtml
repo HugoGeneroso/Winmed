@@ -1,0 +1,124 @@
+﻿@model IEnumerable<Winmed.Models.Empresa>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+{
+    @Html.AntiForgeryToken()
+}
+<link href="@Url.Content("~/Content/Empresa/CSS/empresa.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/node_modules/bootstrap-table/src/bootstrap-table.css")" rel="stylesheet" />
+<div class="container-user">
+    <h4>Lista de usuários</h4>
+    <table id="table"
+           data-toggle="table"
+           data-search="true"
+           data-filter-control="true"
+           data-show-export="true"
+           data-click-to-select="false"
+           data-toolbar="#toolbar">
+        <thead>
+            <tr>
+                <th data-field="ID" data-filter-control="input" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.ID)
+                </th>
+                <th data-field="RazaoSocial" data-filter-control="input" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.RazaoSocial)
+                </th>
+                <th data-field="NomeFantasia" data-filter-control="input" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.NomeFantasia)
+                </th>
+                <th data-field="Email" data-filter-control="input" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th data-field="Endereco" data-filter-control="select" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Endereco)
+                </th>
+                <th data-field="Numero" data-filter-control="select" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Numero)
+                </th>
+                <th data-field="Complemento" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Complemento)
+                </th>
+                <th data-field="Bairro" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Bairro)
+                </th>
+                <th data-field="CNPJ" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.CNPJ)
+                </th>
+                <th data-field="Delete" data-sortable="true">
+                    Remover
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td id="id">
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RazaoSocial)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeFantasia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Endereco)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Numero)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Complemento)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bairro)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CNPJ)
+                </td>
+
+                <td>
+                    <button class='btn btn-danger remover-empresa' id="lista_empresas">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <script>
+        $(document.body).on('click', '.remover-empresa', function () {
+            if (confirm("Tem certeza que deseja remover a empresa?")) {
+
+                var id = $(this).closest('tr').find('#id').html();
+                var form = $('#__AjaxAntiForgeryForm');
+                var token = $('input[name="__RequestVerificationToken"]', form).val();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Delete")',
+                    data: {
+                        __RequestVerificationToken: token,
+                        id: id
+                    },
+                    dataType: "json",
+                    success: function () {
+                        alert('Empresa removida com sucesso!');
+                        $('#content-container').load('@Url.Action("Index","Empresas")');
+                    },
+                    error: function () {
+                        alert("Erro ao remover empresa");
+                    }
+                });
+            }
+        })
+
+    </script>
+    <script src="@Url.Content("~/node_modules/bootstrap-table/dist/bootstrap-table.js")"></script>
+    <script src="@Url.Content("~/node_modules/bootstrap-table/dist/locale/bootstrap-table-pt-BR.js")"></script>

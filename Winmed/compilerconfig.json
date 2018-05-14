@@ -1,0 +1,18 @@
+﻿[
+  {
+    "outputFile": "Views/Home/CSS/homepage.css",
+    "inputFile": "Views/Home/CSS/homepage.scss"
+  },
+  {
+    "outputFile": "Content/Home/CSS/homepage.css",
+    "inputFile": "Content/Home/CSS/homepage.scss"
+  },
+  {
+    "outputFile": "Content/Usuario/CSS/usuario.css",
+    "inputFile": "Content/Usuario/CSS/usuario.scss"
+  },
+  {
+    "outputFile": "Content/Empresa/CSS/empresa.css",
+    "inputFile": "Content/Empresa/CSS/empresa.scss"
+  }
+]

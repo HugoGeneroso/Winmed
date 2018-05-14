@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Winmed.Models.Usuario>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+{
+    @Html.AntiForgeryToken()
+}
+<link href="@Url.Content("~/Content/Usuario/CSS/usuario.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/node_modules/bootstrap-table/src/bootstrap-table.css")" rel="stylesheet" />
+<div class="container-user">
+    <h4>Lista de usuários</h4>
+    <table id="table"
+           data-toggle="table"
+           data-search="true"
+           data-filter-control="true"
+           data-show-export="true"
+           data-click-to-select="false"
+           data-toolbar="#toolbar">
+        <thead>
+            <tr>
+                <th data-field="ID" data-filter-control="input" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.ID)
+                </th>
+                <th data-field="Nome" data-filter-control="input" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Nome)
+                </th>
+                <th data-field="Sobrenome" data-filter-control="select" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Sobrenome)
+                </th>
+                <th data-field="Email" data-filter-control="select" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th data-field="CPF" data-sortable="true">
+                    @Html.DisplayNameFor(model => model.CPF)
+                </th>
+                <th data-field="Delete" data-sortable="true">
+                    Remover
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td id="id">@Html.DisplayFor(modelItem => item.ID)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Sobrenome)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CPF)</td>
+                    <td>
+                        <button class='btn btn-danger remover-usuario' id="lista_usuarios">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <script>
+        $(document.body).on('click', '.remover-usuario', function () {
+            if (confirm("Tem certeza que deseja deletar o usuário?")) {
+
+                var id = $(this).closest('tr').find('#id').html();
+                var form = $('#__AjaxAntiForgeryForm');
+                var token = $('input[name="__RequestVerificationToken"]', form).val();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Delete")',
+                    data: {
+                        __RequestVerificationToken: token,
+                        id: id
+                    },
+                    dataType: "json",
+                    success: function () {
+                        alert('Usuário deletado com sucesso!');
+                        $('#content-container').load('@Url.Action("Index","Usuarios")');
+                    },
+                    error: function () {
+                        alert("Erro ao deletar usuário");
+                    }
+                });
+            }
+        })
+
+    </script>
+    <script src="@Url.Content("~/node_modules/bootstrap-table/dist/bootstrap-table.js")"></script>
+    <script src="@Url.Content("~/node_modules/bootstrap-table/dist/locale/bootstrap-table-pt-BR.js")"></script>
